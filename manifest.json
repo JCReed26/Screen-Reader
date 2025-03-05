@@ -3,8 +3,17 @@
     "name": "Side panel extension",
     "version": "1.0",
     "description": "Extension with a default side panel.",
-    "side_panel": {
-      "default_path": "sidepanel.html"
+    "action": {
+        "default_icon": {
+            "16": "icon.png",
+            "32": "icon.png",
+            "48": "icon.png",
+            "128": "icon.png"
+        },
+        "default_popup": "pop-up.html"
+    },
+    "background": {
+        "service_worker": "background.js"
     },
     "permissions": ["sidePanel"]
 }
