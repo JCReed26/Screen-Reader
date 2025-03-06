@@ -24,3 +24,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true;
 });
 // Listeners
+
+
+// Features
+
+// Highlighted moving window would be done with scripting API
+
+

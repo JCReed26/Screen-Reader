@@ -5,15 +5,26 @@
     "description": "Extension with a default side panel.",
     "action": {
         "default_icon": {
-            "16": "icon.png",
-            "32": "icon.png",
-            "48": "icon.png",
-            "128": "icon.png"
+            "16": "/img/icon.png",
+            "32": "/img/icon.png",
+            "48": "/img/icon.png",
+            "128": "/img/icon.png"
         },
         "default_popup": "pop-up.html"
     },
     "background": {
-        "service_worker": "background.js"
+        "service_worker": "/js/background.js"
     },
-    "permissions": ["sidePanel"]
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["/js/content.js"]
+        }
+    ],
+    "permissions": [
+      "activeTab",
+      "scripting",
+      "tabs"
+    ],
+    "host_permissions": ["<all_urls>"]
 }
