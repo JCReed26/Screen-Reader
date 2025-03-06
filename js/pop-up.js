@@ -2,14 +2,41 @@
 
 // Listeners on the pop-up html
 document.addEventListener('DOMContentLoaded', () => {
+    // WPM Variables 
     const minus = document.getElementById('minus');
     const number = document.getElementById('number');
     const plus = document.getElementById('plus');
+    
+    // Toggle Variables 
+    const readToggle = document.getElementById('readToggle');
+    const followToggle = document.getElementById('followToggle');
+    const startToggle = document.getElementById('start');
 
-    // initial grab 
+    // Grab Initial States 
     chrome.runtime.sendMessage({action: 'getCounter'}, response => {
         number.textContent = response.counter;
-    })
+    });
+
+    chrome.runtime.sendMessage({action: 'getRead'}, response => {
+        readToggle.checked = response.ReadAloud;
+    });
+
+    chrome.runtime.sendMessage({action: 'getFollow'}, response => {
+        followToggle.checked = response.FollowText;
+    });
+
+    chrome.runtime.sendMessage({action: 'getStart/Stop'}, response => {
+        console.log('player button clicked');
+        if(response.reader) {
+            startToggle.classList.add('playing');
+        } else {
+            startToggle.classList.remove('playing');
+        }
+    });
+
+
+    // WPM Functions 
+    
     
     minus.addEventListener('click', () => {
         chrome.runtime.sendMessage({action: 'decrement'}, response => {
@@ -20,8 +47,33 @@ document.addEventListener('DOMContentLoaded', () => {
     plus.addEventListener('click', () => {
         chrome.runtime.sendMessage({action: 'increment'}, response => {
             number.textContent = response.counter;
-        })
-    })
+        });
+    });
+
+
+    // Toggle Functions 
+    readToggle.addEventListener('click', () => {
+        chrome.runtime.sendMessage({action: 'read'}, response => {
+            readToggle.checked = response.ReadAloud;
+        });
+    });
+
+    followToggle.addEventListener('click', () => {
+        chrome.runtime.sendMessage({action: 'follow'}, response => {
+            followToggle.checked = response.FollowText;
+        });
+    });
+
+    startToggle.addEventListener('click', () => {
+        chrome.runtime.sendMessage({action: 'start/stop'}, response => {
+            if(response.reader) {
+                startToggle.classList.add('playing');
+            } else {
+                startToggle.classList.remove('playing');
+            }
+        });
+    });
+
 
 });
 

@@ -3,8 +3,22 @@
 //functions 
 
 function extractText() {
-    let bodyText = document.body.innerText; // inner text grabs all visible text 
-    return bodyText;
+    
+    // we need this to focus on the main content of the page 
+    const mainSelectors = [
+        'main',
+        'article'
+    ];
+
+    for (let selector of mainSelectors) {
+        const element = document.querySelector(selector);
+        if (element) {
+            return element.innerText;
+        }
+    }
+
+    return "no text found";
+    
 }
 
 
