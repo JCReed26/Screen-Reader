@@ -1,6 +1,8 @@
-// this gets the content and other data from the website 
-
-//functions 
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.action === "getText") {
+        sendResponse({text: extractText()});
+    }
+})
 
 function extractText() {
     
@@ -20,11 +22,3 @@ function extractText() {
     return "no text found";
     
 }
-
-
-// listener for calls to functions and send to background 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if(request.action === "getText") {
-        sendResponse({text: extractText()});
-    }
-})

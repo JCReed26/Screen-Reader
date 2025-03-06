@@ -77,6 +77,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
+
+
 document.getElementById("extractText").addEventListener('click', () => {
     chrome.tabs.query({active: true, currentWindow: true}, async (tabs) => {
 
@@ -87,7 +89,7 @@ document.getElementById("extractText").addEventListener('click', () => {
                 return;
             }
 
-            // Inject content script 
+            // Inject background script 
             await chrome.scripting.executeScript({
                 target: {tabId: tabs[0].id},
                 files: ['/js/content.js']
