@@ -1,8 +1,18 @@
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.action === "getText") {
+    if (request.message === "getText") {
+        console.log("extractText");
         sendResponse({text: extractText()});
     }
-})
+    if (request.message === "start/stop") {
+        if (request.isReading) {
+            highlightReading();
+        } else {
+            stopHighlighting();
+        }
+        sendResponse({ status: "completed" });
+    }
+    return true;
+});
 
 function extractText() {
     
@@ -21,4 +31,13 @@ function extractText() {
 
     return "no text found";
     
+}
+
+
+function highlightReading() {
+    console.log("start highlight");
+}
+
+function stopHighlighting() {
+    console.log("stop highlight");
 }

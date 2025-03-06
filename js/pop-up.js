@@ -80,11 +80,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 document.getElementById("extractText").addEventListener('click', () => {
+    console.log("call extract Text");
     chrome.tabs.query({active: true, currentWindow: true}, async (tabs) => {
+
+        console.log(tabs, " | ", tabs[0].id, " | ", tabs[0]);
 
         try {
             
             if (!tabs || !tabs[0] || !tabs[0].id) {
+                console.log("pop-up no tabs");
                 document.getElementById("output").innerText = "No active tab found";
                 return;
             }

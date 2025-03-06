@@ -46,7 +46,35 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         case 'start/stop': 
             reader = !reader; 
             sendResponse({reader: reader});
-            highlightReading();
+            if (FollowText) {
+                chrome.tabs.query({active: true, currentWindow: true, status: 'complete'}, function(tabs) {
+                    // Add error checks
+                    console.log("query", tabs); 
+
+                    if (chrome.runtime.lastError) {
+                        console.error(chrome.runtime.lastError);
+                        return;
+                    }
+                    
+                    if (!tabs || tabs.length === 0) {
+                        console.error("No tabs found");
+                        return;
+                    }
+        
+                    const activeTab = tabs[0];
+                    chrome.tabs.sendMessage(activeTab.id, {
+                        message: "start/stop",
+                        isReading: reader
+                    }, (response) => {
+                        if (chrome.runtime.lastError) {
+                            console.error('Failed to send message:', chrome.runtime.lastError);
+                        }
+                    });
+                });
+            }
+            if (ReadAloud) {
+                console.log("readaloud is on")
+            }
             console.log(reader);
             break; 
         case 'getStart/Stop': 
@@ -58,66 +86,3 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 // Listeners
 
 // Features
-
-//Highlighted Text Following 
-function getTextNodes(node, textNodes = []) {
-    if (node.nodeType === Node.TEXT_NODE && node.nodeValue.trim() !== "") {
-        textNodes.push(node);
-    } else {
-        for (let child of node.childNodes) {
-            getTextNodes(child)
-        }
-    }
-    return textNodes;
-}
-
-function moveHighlight(index, allWords = []) {
-    if (!reader || index >= allWords.length) {
-        return;
-    }
-
-    if (index > 0) {
-        allWords[index - 1].style.backgroundColor = "transparent";
-    }
-
-    // Highlight current word
-    if (index < allWords.length) {
-        allWords[index].style.backgroundColor = "yellow"; 
-        index++; 
-        // Pass both parameters in the setTimeout call
-        setTimeout(() => moveHighlight(index, allWords), counter);
-    }
-}
-
-function highlightReading() {
-    const text = extractText(); 
-
-    console.log(text);
-
-    const textNodes = []; 
-    textNodes = getTextNodes(text);
-
-
-    let allWords = []; 
-    textNodes.forEach(node => {
-        const words = node.nodeValue;
-        words.split(/\s+/).filter(word => word.length > 0); 
-        if (words.length == 0) return; 
-
-        const fragment = document.createDocumentFragment(); 
-
-        words.forEach(word => {
-            const span = document.createElement('span'); 
-            span.textContent = word + " "; 
-            span.style.transition = "background-color 0.3s ease";
-            fragment.appendChild(span); 
-            allWords.push(span);
-        });
-
-        node.replaceWith(fragment)
-    });
-
-    let index = 0;
-
-    moveHighlight(index, allWords); 
-}
